@@ -1,0 +1,83 @@
+/*See ReadMe.txt*/
+
+/* *** Global *** */
+div.line {
+	background: #000; /* Black fill */
+}
+.handlePanel{
+	background-color: red;
+}
+
+/* *** Layer *** */
+
+
+/* *** Map *** */
+#mapPanel .populationMaker {
+	border: 0px none;
+	text-align: center;
+	font-family: serif;
+	color: #313131;
+}
+
+/* *** Frize *** */
+
+/* *** resourceWindow *** */
+.popupResource{
+	font-size: 14px;
+	color: #D8D8D8;
+	margin: 8px;
+}
+.popup-anchor-button {
+	cursor: pointer;
+	background-image: url(img/anchor.png);
+	margin: 4px 4px 0 0;
+}
+
+.popup-close-button {
+	cursor: pointer;
+	background-image: url(img/close.png);
+	margin: 4px 4px 0 0;
+}
+
+.popup-title {
+	margin: 8px 57px 8px 8px;
+	border-bottom: 1px dotted #CCC;
+}
+.popup-description {
+	height: auto;
+	max-height: 120px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+ul.popup-links {
+	list-style: none;
+	margin-bottom: -4px;
+	padding: 0;
+	clear: both;
+	text-align: right;
+}
+
+/*.popup-close-button, 
+.popup-anchor-button,
+.popup-description,
+.popup-title,*/
+.popupResource{
+	display : none;
+}
+
+#panelResources{
+	background-color: grey;
+	opacity: 0.9;
+	-webkit-border-radius:8px;
+	-moz-border-radius:8px;
+	border-radius:8px;	
+	padding:8px;
+	background-color:#201e1b;
+	border:0px solid rgba(114, 109, 98, 0.9);
+	padding: 0px;		
+	overflow-y: auto;
+	overflow-x: hidden;
+	direction: rtl;
+}
+

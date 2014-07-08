@@ -1,0 +1,17 @@
+PREFIX dbp:<http://dbpedia.org/ontology/>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX wgs:<http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?label ?sub ?date ?place ?lat ?lon  
+ WHERE {  
+ ?sub   rdf:type dbp:Person;
+        rdfs:label ?label;
+        ?pred_place ?place;
+		dbp:birthDate ?date;
+		dbp:birthPlace ?place .
+ ?place rdf:type ?class;
+		wgs:lat ?lat;
+		wgs:long ?lon.
+ ?class rdfs:subClassOf* dbp:PopulatedPlace.  
+ FILTER ( langMatches( lang(?label),"FR"))  }  

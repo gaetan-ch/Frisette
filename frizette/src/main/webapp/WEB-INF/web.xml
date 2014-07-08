@@ -1,0 +1,33 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+	<display-name>freizemap</display-name>
+	
+	<listener>
+        <listener-class>org.freizemap.web.servlet.ServletListener</listener-class>
+    </listener>
+	
+	<servlet>
+		<servlet-name>InitServlet</servlet-name>
+		<display-name>InitServlet</display-name>
+		<description></description>
+		<servlet-class>org.freizemap.web.servlet.InitServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>EventsAjaxServlet</servlet-name>
+		<display-name>EventsAjaxServlet</display-name>
+		<description></description>
+		<servlet-class>org.freizemap.web.servlet.EventsAjaxServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>InitServlet</servlet-name>
+		<url-pattern>/InitServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>EventsAjaxServlet</servlet-name>
+		<url-pattern>/EventsAjaxServlet</url-pattern>
+	</servlet-mapping>
+	
+</web-app>
