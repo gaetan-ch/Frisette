@@ -6,10 +6,12 @@
 function FreizeMapControler() {
 	this.wrapperMap = new WrapperMap();
 	this.wrapperFreize = new WrapperFreize();
-	this.resourcesWindowControler = new ResourcesWindowControler();
+	
 	this.remoteServer = new RemoteServer();
 	this.requestManager = new RequestManager(this.sendRequestToServerCallBack);
 	this.model = new ModelMarkers();
+	//only controler can see other controler
+	this.resourcesWindowControler = new ResourcesWindowControler(this);
 };
 FreizeMapControler.prototype = {
 	initialize : function() {
@@ -104,6 +106,15 @@ FreizeMapControler.prototype = {
 					//me.resourcesWindowControler.removeMarkers(markers);
 				}
 		);
+	},
+	
+	selectMarker : function (idMarker) {
+		//is it here anymore?
+		if(this.model.isMarkerTimePresent(idMarker)===true){
+			var frizePosition = this.wrapperFreize.getAbsoluteMarkerUIPositionFromId(idMarker),
+			    mapPosition   = this.wrapperMap.getAbsoluteMarkerUIPositionFromId(idMarker);
+			this.resourcesWindowControler.selectWindow(idMarker, mapPosition, frizePosition/*frise position*/);
+		}
 	},
 	
 	sendRequestToServerCallBack: function(requestToServer){

@@ -97,7 +97,12 @@ ModelMarkers.prototype = {
 			}
 		});
 		return marker;
+	},
+	
+	isMarkerTimePresent : function (markerID){
+		return this.getMarkerTimePositionFromId(markerID)!=null;
 	}
+	
 	
 
 };

@@ -2,7 +2,9 @@
 
 function WrapperFreize() {
 	var optionsTimeLauncher={
-		caller : this,
+		functionToCall : this._functionToCall,
+		functionShoulBeCalled : this._functionShoulBeCalled,
+		contextThis : this,
 		repeat : false,
 		reloadTime : CONFIG_FREIZE_MAP.TIME_FRISE_TEMPORISATION_MS	
 	};

@@ -1,19 +1,22 @@
 /**
- * Only one request to call 'options.caller.functionToCall' during the time
- * ('options.reloadTime'). options.repeat ===true repeat always. Before call
- * 'options.functionToCall' test if it is necessary tu call
- * 'options.caller.functionShoulBeSend'
+ * Only one request to call 'options.functionToCall' during the time ('options.reloadTime'). 
+ * options.repeat === true repeat always. 
+ * The function options.functionToCall call at max options.reloadTime.
+ * The function options.functionShoulBeCalled can be 'undefined' to have no effect.
  */
-function TimeLauncher(options) {
-	this.caller = options.caller,
+function TimeLauncher(options) {	
+	this.functionToCall = options.functionToCall;
+	this.functionShoulBeCalled = options.functionShoulBeCalled;
+	this.contextCallerThis = options.contextThis;	
 	this.repeat = options.repeat,
 	this.reloadTime = options.reloadTime,
 	this.isDuringInterval = false;
 	this.relaunch = false;
+	this.timerInterval = null;
 	
 	if (this.repeat === true) {
 		var me = this;
-		window.setInterval(function() {
+		this.timerInterval = window.setInterval(function() {
 			me.isDuringInterval = false;
 			if(me.relaunch === true){
 				me.relaunch = false;
@@ -40,18 +43,23 @@ TimeLauncher.prototype = {
 				me.isDuringInterval = false;
 				if(me.relaunch === true){
 					me.relaunch = false;
-					me._executeFunction();
-					
+					me._executeFunction();					
 				}
 			}, me.reloadTime);
 		}
 	},
 	_executeFunction : function() {
 		
-		if(this.caller._functionShoulBeCalled()===true){
+		if(this.functionShoulBeCalled === 'undefined' || this.functionShoulBeCalled.call(this.contextCallerThis)===true){
 			
-			this.caller._functionToCall();
-		}		
+			this.functionToCall.call(this.contextCallerThis);
+		}			
+	},
+	
+	deleteTimer: function(){
+		if(this.timerInterval !== null){
+			window.clearInterval(this.timerInterval);
+		}	
 	}
 
 };

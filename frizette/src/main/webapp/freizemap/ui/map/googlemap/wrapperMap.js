@@ -13,6 +13,17 @@ function WrapperMap() {
  */
 WrapperMap.prototype = {
 	initialize : function() {
+		var mapPanel = document.getElementById("mapPanel");
+		var handle = new HandlePanel(mapPanel);
+		handle.display();		
+		handle.onHeightChange(function(heightPercent){
+			console.info("xxx");
+			$.event.trigger({
+				type : CONFIG_FREIZE_MAP.MAP_RESIZE_PANEL_HEIGHT_EVENT_TYPE,
+				heightPercent : heightPercent,
+				time : new Date()
+			});
+		});
 		
 		if(!this.testGoogleLoaded()){
 			//google not loaded!!!!			
@@ -23,21 +34,12 @@ WrapperMap.prototype = {
 			center : new google.maps.LatLng(45, 35),
 			zoom : 6
 		};
-		var mapPanel = document.getElementById("mapPanel");
+		
 		var googleMapPanel = document.getElementById("googleMapPanel");
 		this.googleMap = new google.maps.Map(googleMapPanel, mapOptions);
 		var map = this.googleMap;
 		
-		var handle = new HandlePanel(mapPanel);
-		handle.display();		
-		handle.onHeightChange(function(heightPercent){
-			console.info("xxx");
-			$.event.trigger({
-				type : CONFIG_FREIZE_MAP.MAP_RESIZE_PANEL_HEIGHT_EVENT_TYPE,
-				heightPercent : heightPercent,
-				time : new Date()
-			});
-		});		
+				
 		// Evenements list:
 		// https://developers.google.com/maps/documentation/javascript/reference?csw=1#Map
 		google.maps.event.addListener(this.googleMap, 'idle', function() {		

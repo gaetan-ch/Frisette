@@ -5,7 +5,9 @@
 function RequestManager(sendRequestToServerCallBack) {
 
 	var optionsTimeLauncher={
-			caller : this,
+			functionToCall : this._functionToCall,
+			functionShoulBeCalled : this._functionShoulBeCalled,
+			contextThis : this,
 			repeat : true,
 			reloadTime : CONFIG_FREIZE_MAP.TIME_RESET_SERVER_CALL_MS	
 		};

@@ -5,10 +5,6 @@
 function ResourceMarkerLinkLayer(){
 	this.$DivPanel = $('#resourceMarkerLinkLayer');	
 	this.$canvasDivArray = new Array();
-	this.velX = 0;
-	this.velY = 0;
-	this.x = 0;
-	this.y = 0;
 }
 
 /**
@@ -109,88 +105,13 @@ ResourceMarkerLinkLayer.prototype ={
 			    }
 		       linesAnimations.addLine({left:windowLeft,top:windowTop},{left:markerFriseLeft,top:markerFriseTop});
 		       linesAnimations.startDraw();
-//		       ctx.beginPath();
-//		       ctx.moveTo(windowLeft,windowTop);
-//		       ctx.lineTo(markerFriseLeft,markerFriseTop);
-//		       ctx.stroke();
-//		   
 		    } else {
 		    	console.info('Impossible to draw line. Update the navigator. Canvas API not supported');
 				
 		    }	
 		    return $canvas;
-	},
-	_drawline : function(ctx,anchorWindowPosition, anchorMarketPosition){
-		// Filled triangle
-	       
-	       i = 0;
-	     //find the window anchor
-	       if(anchorMarketPosition!=null){
-	    	   
-	    	   this.velX = 0;
-	    	   this.velY = 0;
-	    	   this.x = anchorWindowPosition.left;
-	    	   this.y = anchorWindowPosition.top;
-	    	   this._draw(this,ctx,anchorMarketPosition);
-	       }		
-	},
+	}
 	
-	_draw : function(me,ctx, anchorMarkerPosition){   
-        var lastPointX= me.x,
-        	lastPointY= me.y;
-      
-        var tx = anchorMarkerPosition.left - me.x,
-            ty = anchorMarkerPosition.top - me.y,
-            goal_dist = Math.sqrt(tx*tx+ty*ty),
-            speed_per_tick  = 20;
-            //rad = Math.atan2(ty,tx);
-            //angle = rad/Math.PI * 180;;
-        
-        if (goal_dist > speed_per_tick)
-        {
-            var ratio = speed_per_tick / goal_dist;
-            var x_move = ratio * tx;  
-            var y_move = ratio * ty;
-            me.x = x_move + me.x ;  
-            me.y = y_move + me.y;
-        }
-        else
-        {
-        	me.x = anchorMarkerPosition.left; 
-        	me.y = anchorMarkerPosition.top;
-        }
-	  
-        
-        
-       
-        //ctx.clearRect(0,0,400,400);
-       
-        //ctx.rect(me.x, me.y, 4, 4);
-        console.info('(lastPointX,lastPointY)'+ lastPointX + ' <>' + lastPointY + 
-        			' (me.x,me.y)'+ me.x + ' <>' + me.y
-        			+ ' (anchorMarkerPosition.left,anchorMarkerPosition.top)'+ anchorMarkerPosition.left + ' <>' + anchorMarkerPosition.top);
-        console.info();
-        ctx.strokeStyle='#201e1b';
-        ctx.moveTo(lastPointX,lastPointY);
- 	    ctx.lineTo(me.x,me.y);
- 	    ctx.stroke();  
-        
-        /**/
-        
-        //check if it is near the end
-        if( Math.abs(me.x -anchorMarkerPosition.left)>2 &&  Math.abs(me.y -anchorMarkerPosition.top)>2){        	
-        	setTimeout(function(){
-            	me._draw(me,ctx, anchorMarkerPosition);
-            	}, 20);
-        }else{
-        	ctx.fillStyle = "#ff0";
-            ctx.beginPath();
-            ctx.rect(anchorMarkerPosition.left, anchorMarkerPosition.top, 10, 10);
-            ctx.closePath();
-            ctx.fill();
-        }
-           
-    },
     
 };
 	

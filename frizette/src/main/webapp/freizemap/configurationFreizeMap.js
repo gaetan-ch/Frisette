@@ -15,6 +15,8 @@ window.CONFIG_FREIZE_MAP={
 	
 	TIME_FRISE_TEMPORISATION_MS : 500,
 	
+	//TIME_FRISE_DRAG_HANDLE_LAYER_MS : 1000,
+	
 	completeConfiguration :function (){
 		// load some stuff from server
 		// >> ping, media...
@@ -40,7 +42,8 @@ window.CONFIG_Z_INDEX={
 	};
 
 window.CONFIG_ANIMATION={
-		 TIME_MEDIAN: '500'
+		 TIME_MEDIAN: '500',
+		 DELAY_PUT_HANDLER: '100'
 	};
 
 window.CONFIG_FREIZE_MAP.completeConfiguration();

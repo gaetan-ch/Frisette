@@ -6,6 +6,8 @@ div.line {
 }
 .handlePanel{
 	background-color: red;
+	min-height: 15px;
+	min-width: 15px;
 }
 
 /* *** Layer *** */

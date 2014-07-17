@@ -8,7 +8,7 @@ function ResourcesPanel(){
 	
 	this.$handlePanel = new HandlePanel(this.$DivPanel);
 	this.$handlePanel.onHeightChange(function(heightPercent){
-		console.info("yyy");
+		
 		$.event.trigger({
 			type : CONFIG_FREIZE_MAP.XXXXXXXXXXXXXXXXX,
 			heightPercent : heightPercent,
@@ -26,7 +26,7 @@ ResourcesPanel.prototype.constructor = ResourcesPanel;
  * Anchor the window to this panel
  * @param windowResource
  */
-ResourcesPanel.prototype.addWindowResource = function(windowResource) {
+ResourcesPanel.prototype.addWindowResource = function(windowResource,onReadyFunction) {
 		
 		windowResource.detach();
 		windowResource.resetStyle();
@@ -38,18 +38,26 @@ ResourcesPanel.prototype.addWindowResource = function(windowResource) {
 		windowResource.hiddenAnchorButton();
 		this.$DivPanel.append(windowResource.getJQueryAnchor());
 		
+		//add listener
+		
+		
 		if(this.isEmpty()){
-			this._show();
+			this._show(onReadyFunction);
+		}else{
+			onReadyFunction();
 		}
 		this.push(windowResource);
+		
 	};
 
-ResourcesPanel.prototype._show = function(windowResource){
+ResourcesPanel.prototype._show = function(onReadyFunction){
 	this.$handlePanel.display();		
 	
 	this.$DivPanel.css('padding',  '5px');
 	this.$DivPanel.css('border',  '2px');
-	this.$DivPanel.animate({left: '0px'},window.CONFIG_ANIMATION.TIME_MEDIAN*2);
+	this.$DivPanel.animate({left: '0px'},{duration:window.CONFIG_ANIMATION.TIME_MEDIAN*2,
+										  complete:onReadyFunction});
+	
 };	
 
 /*hide this panel and the last window*/

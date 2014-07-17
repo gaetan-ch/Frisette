@@ -1,10 +1,12 @@
 /* Windows information controler
  * */
 
-function ResourcesWindowControler(){
+function ResourcesWindowControler( freizeMapControler){
 	
 	//display windows in absolute way
 	this.layerResources=new ResourcesPopupLayer();
+	
+	this.freizeMapControler = freizeMapControler;
 	
 	//display the same windows in relative way in a Panel
 	this.panelResources= new ResourcesPanel();	
@@ -39,6 +41,17 @@ ResourcesWindowControler.prototype = {
 					onAnchorRequest : function($popup){
 						me._anchorWindow($popup);
 					}
+					,
+					onSelectWindow : function($popup){
+						//go to the controler which send back to map and frize
+						var markerId= $popup.marker.wikiID;
+						if(me._indexMarkerSelected(markerId)===-1){
+							//not selected
+							me.freizeMapControler.selectMarker(markerId);
+						}else{
+							me.unSelectWindow(markerId);
+						}
+					}
 				});
 				
 			}else{
@@ -63,15 +76,20 @@ ResourcesWindowControler.prototype = {
 				
 		_anchorWindow : function (windowToAnchor){
 			console.info('anchor the window');
+			var markerId = windowToAnchor.marker.wikiID,
+					  me = this;
 			
-			//delete line from link layer
-			this.layerResourceMarkerLink.remove(windowToAnchor.marker.wikiID);
+			//delete line from link layer and selection
+			this.unSelectWindow(markerId)
 			
 			//add the window to the panel Anchor
-			this.panelResources.addWindowResource(windowToAnchor);
+			this.panelResources.addWindowResource(windowToAnchor, function(){
+				//on ready
+				//redraw lines
+				me.freizeMapControler.selectMarker(markerId);
+			});
 			
-			//redraw line
-			//this.layerResourceMarkerLink.linkToMarkers(windowMarker,positionMarkerMap,positionMarkerFrise);
+			
 		},
 		
 		_closeWindow : function (windowToClose){

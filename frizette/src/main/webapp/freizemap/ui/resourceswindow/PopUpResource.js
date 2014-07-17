@@ -55,26 +55,38 @@ PopUpResource.prototype = {
 		});
 	},
 	*/	
-	setObserversFunction : function (observersFunction){
+	setObserversFunction : function (observersFunction_){
 		
 		var $closeButton  = this.$modal.find('.popup-close-button'),
 	        $anchorButton = this.$modal.find('.popup-anchor-button'),
-	                   me = this;
-	
+	                   me = this,
+		observersFunction = observersFunction_;
+		
 		if($.isFunction(observersFunction.onCloseRequest)){
-			$closeButton.on('click',function (){
+			$closeButton.on('click',function (e){
 				observersFunction.onCloseRequest(me);}
 			);
 		}
 		if($.isFunction(observersFunction.onAnchorRequest)){
 			$anchorButton.on('click',function (){
 				observersFunction.onAnchorRequest(me);
+				//click on anchor so, the button anchor will be hide and the popup send to the left panel
+				if($.isFunction(observersFunction.onSelectWindow)){
+						window.setTimeout(function(){
+							//add the listener
+							me.$modal.on('click',function(){
+								observersFunction.onSelectWindow(me);
+							});
+						},window.CONFIG_ANIMATION.DELAY_PUT_HANDLER); //end setTimeout
+				}//end if
 			});
 		}
+		
+		
 	},
 		
 	_initListener : function(){
-		
+			
 	},
 	
 	
