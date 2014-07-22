@@ -95,7 +95,7 @@ public class EventsAjaxServlet extends FreizeMapServlet {
 	private List<PopulationEvent> getListePopulationEventForTest(
 			List<PositionEvent> listePositionEven) {
 		List<PopulationEvent> listePopulationEvent = new ArrayList<PopulationEvent>();
-		if (listePositionEven.size() > 1) {
+		/*if (listePositionEven.size() > 1) {
 			// pour les test on met un point
 			PositionEvent pe = listePositionEven.remove(0);
 			PopulationEvent population = new PopulationEvent();
@@ -108,7 +108,7 @@ public class EventsAjaxServlet extends FreizeMapServlet {
 			population.setTimestamp(pe.getTimestamp());
 			population.setWikiID(toDelete++);
 			listePopulationEvent.add(population);
-		}
+		}*/
 		return listePopulationEvent;
 	}
 

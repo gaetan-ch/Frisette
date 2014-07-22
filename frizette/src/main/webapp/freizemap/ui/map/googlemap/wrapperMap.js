@@ -21,7 +21,7 @@ WrapperMap.prototype = {
 		}
 		
 		var mapOptions = {
-			center : new google.maps.LatLng(45, 35),
+			center : new google.maps.LatLng(45, 5),
 			zoom : 6
 		};
 		

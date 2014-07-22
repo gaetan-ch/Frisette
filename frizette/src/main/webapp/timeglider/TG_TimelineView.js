@@ -2092,6 +2092,7 @@ tg.TG_TimelinePlayer.prototype = {
 	*/											
 	addTick: function (info) {
 		
+		// define width stick...
 		var me = this,       mDays = 0,      dist = 0,        pos = 0,       
 			tperu = 0,       serial = 0,     shiftLeft = 0,   ctr = 0,  
 			tid = "",        tickHtml = "",  sub_label = "",  label = {}, 
