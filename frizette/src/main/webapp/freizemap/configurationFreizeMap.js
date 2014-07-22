@@ -1,7 +1,7 @@
 window.CONFIG_FREIZE_MAP={
 	MAP_CHANGE_BOUND_EVENT_TYPE : 'areaMapZoneChanged',
 	
-	MAP_RESIZE_PANEL_HEIGHT_EVENT_TYPE : 'panelMapHeightChanged',
+	//MAP_RESIZE_PANEL_HEIGHT_EVENT_TYPE : 'panelMapHeightChanged',
 	
 	TIME_CHANGE_BOUND_EVENT_TYPE : 'timeFrizeZoneChanged',
 	
@@ -40,6 +40,9 @@ window.CONFIG_Z_INDEX={
 		 // popup dislpay upon the map or the frise and the panel resource 
 		 POPUP_RESOURCES: 17000
 	};
+
+//please do +1
+window.GENERATE_ID=200;
 
 window.CONFIG_ANIMATION={
 		 TIME_MEDIAN: '500',

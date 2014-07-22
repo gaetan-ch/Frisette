@@ -42,16 +42,27 @@ ResourcesContainer.prototype = {
 		//var windowFind = this.getWindowFromMarker(windowResource.marker.wikiID);
 		if(windowResource!=null){
 			windowResource.remove();
+			this._detachFromThisContainer(windowResource);
+			return true;
+		}
+		return false;
+	},
+	_detachFromThisContainer : function(windowResource) {
+		//var windowFind = this.getWindowFromMarker(windowResource.marker.wikiID);
+		if(windowResource!=null){			
 			var index = this._getIndexWindow(windowResource.marker.wikiID);
 			this.resourcesWindowsList.splice(index, 1);
 			return true;
 		}
 		return false;
 	},
+	
 	remove : function(windowResource) {
 		this._remove(windowResource);
 	},
-	
+	detachFromThisContainer : function(windowResource) {
+		this._detachFromThisContainer(windowResource);
+	},
 	selectWindow : function (idMarker){
 		var window = this.getWindowFromMarker(idMarker);
 		if(window!=null){

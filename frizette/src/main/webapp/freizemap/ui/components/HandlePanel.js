@@ -1,20 +1,20 @@
-HandlePanel.viewHtml='<div class=\'handlePanel\' id=\'${id}\'></div>';
+HandlePanel.viewHtml='<div class=\'handlePanel\' id=\'handlePanel_${id}\'></div>';
 
-var generateID = 1025; //voir autrement
-function HandlePanel(contentPanel) {  
+
+function HandlePanel(contentPanel, position) {  
   // Now initialize all properties.
   if(contentPanel instanceof jQuery){
 	  this.$contentPanel = contentPanel;  
   }else{
 	  this.$contentPanel = $(contentPanel);
   }
-    
+  this.contentPanelPosition = position;
+	  
   this.typeEvent = null;
-  this.contentPanelPosition = null;
   this.isHide = false;
   this.eventsType = ['HEIGHT_CHANGE'];
   this.synchroneEventHandler = new SynchroneEventHandler(this.eventsType);
-  this.$panelHandleTag = $(HandlePanel.viewHtml.replace('${id}',generateID++));
+  this.$panelHandleTag = $(HandlePanel.viewHtml.replace('${id}',window.GENERATE_ID++));
   this.initialDimension = {height:this.$contentPanel.height(),width:this.$contentPanel.width()};
   
   this.timeLauncher = null; //use to reduce fire event
@@ -22,12 +22,11 @@ function HandlePanel(contentPanel) {
 };
 
 HandlePanel.prototype.POSITION_TOP=1;
-HandlePanel.prototype.POSITION_LEFT=2;
-HandlePanel.prototype.POSITION_RIGHT=3;
 HandlePanel.prototype.POSITION_BOTTOM=4;
 HandlePanel.prototype.FIRST_MOUSE_MOVE_IS_CLICK='click';
 HandlePanel.prototype.DRAG_MOUSE_MOVE='drag';
 
+//to remove
 HandlePanel.prototype.onHeightChange = function(functionOnHeightChange) {		
 	this.synchroneEventHandler.addListener('HEIGHT_CHANGE', functionOnHeightChange);
 },
@@ -57,7 +56,7 @@ HandlePanel.prototype.display = function() {
 	return this;
 };
 
-HandlePanel.prototype._createPosition = function(top, left){
+/*HandlePanel.prototype._createPosition = function(top, left){
 	return {
 		'top':top,
 		'left':left,
@@ -73,7 +72,7 @@ HandlePanel.prototype._createPosition = function(top, left){
 			return nbeSimilarFunction(position2.top,top,5) &&  nbeSimilarFunction(position2.left,left,5);
 		}
 	};
-};
+};*/
 
 HandlePanel.prototype._onMouseEnter = function(event){ 
 	console.info("mouse enter the handler of the panel>>> reset");
@@ -133,14 +132,14 @@ HandlePanel.prototype._mouseDocumentMove = function(event){
 								width:(event.pageX - me.initialMousePosition.left)};
 		var newHeight = me.initialDimension.height - differenceFromInitialPosition.height;
 		var newHeightPercent = (newHeight*100)/me.initialDimension.height;
-		me.$contentPanel.height(newHeight);
+		me.$contentPanel.height(newHeightPercent+'%');
 		//me.$contentPanel.animate('height',newHeightPercent );
 		//me.$contentPanel.css('height','\''+(newHeightPercent + '%\''));
 		console.info("New Height content panel, eventpageY: " + event.pageY + ' newHeightPercent:'+newHeightPercent + '  see:'+me.$contentPanel.height());
 		//so we fire height change until 30% when we hide the panel
 		if(newHeight< me.initialDimension.height/3){
 			me._mouseDocumentUp();
-			me._hidePanel.call(me);	
+			me._clickHandlePanel.call(me);	
 		}
 	}
 	
@@ -152,8 +151,10 @@ HandlePanel.prototype._onMouseUp = function(event){
 	
 	if(me.typeEvent === null || me.typeEvent === this.FIRST_MOUSE_MOVE_IS_CLICK){
 		//the first move is for the click?! 
-		console.info("click the handler of the panel, close the parent panel");
-		me._hidePanel.call(me);		
+		console.info("click the handler of the panel");
+		
+		
+		me._clickHandlePanel.call(me);		
 	}else{//(me.typeEvent ===this.DRAG_MOUSE_MOVE)
 		//if the height is more than 50% we close the panel 
 	}
@@ -174,37 +175,19 @@ HandlePanel.prototype._resetMouseDragEvent = function(){
 /**
  * 
  */
-HandlePanel.prototype._hidePanel = function(){
-	me = this;
-	this.$contentPanel.animate({height :'2%'},{
-		duration :window.CONFIG_ANIMATION.TIME_MEDIAN,
-		step: function(number,tween){
-			console.info("step" + me.$contentPanel.height());
-				me.synchroneEventHandler.fire('HEIGHT_CHANGE',number);
-			},
-		progress: function(promise,progress,remainingMs ){
-			console.info("progress");
-			}
-		}
-	);
-	//this._positionHandleUpsideParentPanel();
+HandlePanel.prototype._clickHandlePanel = function(){
+	this.$panelHandleTag.off('mousemove',this._onMouseMove);
+	this.$panelHandleTag.off('mouseup', this._onMouseUp);
+	this.onClickHandle();
 };
 
+/*please overwrite*/
+HandlePanel.prototype.onClickHandle = function(){};
 
 
 HandlePanel.prototype._positionHandleUpsideParentPanel = function(){
-	//find is the panel is on the left, right,bottom or on the top
-	var topLeftWindow = this._createPosition(0, 0);
-	var topRightWindow = this._createPosition(0, window.innerWidth);
-	var bottomLeftWindow = this._createPosition(window.innerHeight, 0);
-	var bottomRightWindow = this._createPosition(window.innerHeight, window.innerWidth);
 	
-	var topLeftPanel = this._createPosition(this.$contentPanel.offset().top,this.$contentPanel.offset().left);
-	var topRightPanel = this._createPosition(this.$contentPanel.offset().top,this.$contentPanel.offset().left + this.$contentPanel.innerWidth());
-	var bottomLeftPanel = this._createPosition(this.$contentPanel.offset().top + this.$contentPanel.innerHeight(),this.$contentPanel.offset().left);
-	var bottomRightPanel = this._createPosition(this.$contentPanel.offset().top + this.$contentPanel.innerHeight(),this.$contentPanel.offset().left + this.$contentPanel.innerWidth());
-	
-	if(topLeftWindow.isSimilars(topLeftPanel) && topRightWindow.isSimilars(topRightPanel)){  
+	if(this.contentPanelPosition === HandlePanel.prototype.POSITION_TOP){  
 		//panel on the window top
 		console.info("panel on the top");
 		this.$panelHandleTag.css({
@@ -215,21 +198,8 @@ HandlePanel.prototype._positionHandleUpsideParentPanel = function(){
 			position: 'absolute',
 			'z-index': window.CONFIG_Z_INDEX.HANDLER
 		});
-		this.contentPanelPosition = HandlePanel.prototype.POSITION_TOP;
-	}else if((topLeftWindow.isSimilars(topLeftPanel)  && bottomLeftWindow.isSimilars(bottomLeftPanel))
-				|| ( topLeftPanel.left<topLeftWindow.left && bottomLeftPanel.left<bottomLeftWindow.left)){
-		//panel on the window left
-		console.info("panel on the left");
-		this.$panelHandleTag.css({
-			top: '70%',
-			right: '-10%',
-			width: '5%',  
-			height: '10%',
-			position: 'absolute',
-			'z-index': window.CONFIG_Z_INDEX.HANDLER
-		});
-		this.contentPanelPosition = HandlePanel.prototype.POSITION_LEFT;
-	}else if(bottomLeftWindow.isSimilars(bottomLeftPanel) && bottomRightWindow.isSimilars(bottomRightPanel)){
+		
+	}else if(this.contentPanelPosition === HandlePanel.prototype.POSITION_BOTTOM){
 		//panel on the window bottom
 		console.info("panel on the bottom");
 		var height = (this.$contentPanel.innerHeight()*10/100);
@@ -241,13 +211,9 @@ HandlePanel.prototype._positionHandleUpsideParentPanel = function(){
 			position: 'absolute',
 			'z-index': window.CONFIG_Z_INDEX.HANDLER
 		});
-		this.contentPanelPosition = HandlePanel.prototype.POSITION_BOTTOM;
-	}else if(topRightWindow.isSimilars(topRightPanel) && bottomRightWindow.isSimilars(bottomRightPanel)){
-		//panel on the window right
-		console.info("panel on the right");
-		this.contentPanelPosition = HandlePanel.prototype.POSITION_RIGHT;
-		
+	
+	
 	}else{
-		console.debug("The panel should have 2 points on corner window");		
+		console.debug("The panel should be top or bottom");		
 	}	
 };

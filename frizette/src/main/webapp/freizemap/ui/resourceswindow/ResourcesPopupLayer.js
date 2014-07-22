@@ -16,11 +16,11 @@ ResourcesPopupLayer.prototype.constructor = ResourcesPopupLayer;
  * @param windowResource
  */
 ResourcesPopupLayer.prototype.addPopUpResource = 
-	 function(windowResource) {		
+	 function(windowResource, topPoint, bottomPoint) {
+	
 		this.push(windowResource);	
-		
 		this.$DivPanel.append(windowResource.getJQueryAnchor());
-		var positionCenterWindow = this._computeWindowCenterPosition(windowResource);		
+		var positionCenterWindow = this._computeWindowCenterPosition(windowResource, topPoint, bottomPoint);		
 		windowResource.display(positionCenterWindow);
 		
 	};
@@ -33,13 +33,28 @@ ResourcesPopupLayer.prototype.removeAllWindows =
 	
 	
 ResourcesPopupLayer.prototype._computeWindowCenterPosition =
-	function(popup){
-		//first window: center on the right
-		var width = popup.getWidth(),
-		    height = popup.getHeight();
-		var tempLeft = window.innerWidth - width/2 - this.marginLeft;
-		var tempTop = window.innerHeight/2 ;		
+	function(popup, topPoint, bottomPoint){
+		var popupTop, popupLeft,
+			widthPopup = popup.getWidth(),
+			heightPopup = popup.getHeight();
 		
-		return {top : tempTop, left :tempLeft};
+		if(topPoint===null){
+			popupLeft = bottomPoint.left + widthPopup*1.5;
+			popupTop  = bottomPoint.top + heightPopup*1.5;
+		}else if (bottomPoint===null){
+			popupLeft = topPoint.left + widthPopup*1.5;
+			popupTop  = topPoint.top + heightPopup*1.5;
+		}else{
+			popupLeft = (bottomPoint.left + topPoint.left)*0.5 + widthPopup*1.5;
+			popupTop  = (bottomPoint.top + topPoint.top)*0.5 + heightPopup*1.5;
+		}
+		
+		//check if out of window	
+		if( (popupLeft+ widthPopup > window.innerWidth) || (popupTop+ heightPopup > window.innerHeight) ){
+			popupLeft = window.innerWidth - widthPopup/2 - this.marginLeft;
+			popupTop = window.innerHeight/2 ;		
+		}
+		
+		return {top : popupTop, left :popupLeft};
 	};
 	

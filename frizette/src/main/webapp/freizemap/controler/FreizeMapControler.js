@@ -16,9 +16,10 @@ function FreizeMapControler() {
 FreizeMapControler.prototype = {
 	initialize : function() {
 
-		this.wrapperMap.initialize();
-
-		this.wrapperFreize.initialize();
+		
+		var $mapPanel       = this.wrapperMap.initialize();
+		var $divFrisePanel  = this.wrapperFreize.initialize();
+		new NorthSouthLayoutPanel($divFrisePanel,$mapPanel);
 		
 		this._initListener();
 
@@ -49,18 +50,7 @@ FreizeMapControler.prototype = {
 					e.data.me._onBoundsChange(e.type,e.data.me.wrapperMap.getAreaBounds(),e.boundTime);
 					e.data.me.resourcesWindowControler.deleteAllWindow();
 				}
-		);
-		// Suscribe to frize event
-		$(document).on(
-				CONFIG_FREIZE_MAP.MAP_RESIZE_PANEL_HEIGHT_EVENT_TYPE,
-				{
-					me : this
-				},
-				function(e) {
-					//e.heightPercent
-					$('#frisePanel').height((100 - e.heightPercent)+'%');
-				}
-		);
+		);		
 		
 		$(document).on(
 				CONFIG_FREIZE_MAP.CLICK_MARKER_FRIZE_EVENT_TYPE,
@@ -73,8 +63,8 @@ FreizeMapControler.prototype = {
 						e.marker = e.data.me.model.getMarkerTimePositionFromId(e.idMarker);
 					}
 					var mapPosition = e.data.me.wrapperMap.getAbsoluteMarkerUIPositionFromId(e.idMarker);
-					
-					e.data.me.resourcesWindowControler.addWindow(e.marker,mapPosition/*map position*/, e.position/*frise position*/);
+					//
+					e.data.me.resourcesWindowControler.ressourceMapOrFriseSelected(e.marker,mapPosition/*map position*/, e.position/*frise position*/);
 				}
 							
 		);
@@ -86,11 +76,7 @@ FreizeMapControler.prototype = {
 				},
 				function(e) {
 					var frizePosition = e.data.me.wrapperFreize.getAbsoluteMarkerUIPositionFromId(e.idMarker);
-					if(e.data.me.resourcesWindowControler.isMarkerPresent(e.idMarker)){
-						e.data.me.resourcesWindowControler.selectWindow(e.marker, e.position/*map position*/, frizePosition/*frise position*/);						
-					}else{
-						e.data.me.resourcesWindowControler.addWindow(e.marker, e.position/*map position*/, frizePosition/*frise position*/);
-					}
+					e.data.me.resourcesWindowControler.ressourceMapOrFriseSelected(e.marker, e.position/*map position*/, frizePosition/*frise position*/);					
 				}
 							
 		);

@@ -38,11 +38,11 @@ WrapperFreize.prototype = {
 	initialize : function() {
 
 		var container_name = this.base_namespace + "#" + this.WIDGET_ID, tagFreize;
-		var $divMapPanel=$("#"+this.WIDGET_ID);
+		var $divFrisePanel=$("#"+this.WIDGET_ID);
 		// Time liner\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		// call jquery UI, plugin timeline
-		tagFreize = $divMapPanel.timeline({
+		tagFreize = $divFrisePanel.timeline({
 			"min_zoom" : 1,
 			"max_zoom" : 55,
 			"image_lane_height" : 100,
@@ -55,20 +55,7 @@ WrapperFreize.prototype = {
 
 		this.freize  = tagFreize.data("timeline");
 		
-		var me = this;
-		
-		var handle = new HandlePanel($divMapPanel);
-		handle.display();		
-		handle.onHeightChange(function(heightPercent){
-			console.info("yyy");
-			$.event.trigger({
-				type : CONFIG_FREIZE_MAP.XXXXXXXXXXXXXXXXX,
-				heightPercent : heightPercent,
-				time : new Date()
-			});
-		});
-		
-		
+		var me = this;		
 		me._initListener(container_name);	
 		
 		
@@ -102,6 +89,9 @@ WrapperFreize.prototype = {
 
 		// timeglider.TG_Mediator;
 
+		
+		return $divFrisePanel;
+		
 	},// end initialize function
 
 	_fireBoundChanged : function(){

@@ -12,18 +12,8 @@ function WrapperMap() {
  * 
  */
 WrapperMap.prototype = {
-	initialize : function() {
+	initialize : function(mapPanel) {
 		var mapPanel = document.getElementById("mapPanel");
-		var handle = new HandlePanel(mapPanel);
-		handle.display();		
-		handle.onHeightChange(function(heightPercent){
-			console.info("xxx");
-			$.event.trigger({
-				type : CONFIG_FREIZE_MAP.MAP_RESIZE_PANEL_HEIGHT_EVENT_TYPE,
-				heightPercent : heightPercent,
-				time : new Date()
-			});
-		});
 		
 		if(!this.testGoogleLoaded()){
 			//google not loaded!!!!			
@@ -50,6 +40,7 @@ WrapperMap.prototype = {
 				time : new Date()
 			});
 		});
+		return $(mapPanel);
 	},
 	
 	getAreaBounds :  function (){

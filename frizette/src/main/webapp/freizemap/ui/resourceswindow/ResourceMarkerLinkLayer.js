@@ -15,9 +15,6 @@ ResourceMarkerLinkLayer.prototype ={
 		
 		linkToMarkers : function(windowMarker,positionMarkerMap,positionMarkerFrise){
 			
-
-			//console.info(' popup' + positionMarkerMap.left+'-'+ positionMarkerMap.top + ' - map: '+ positionCenterWindow.left +'-'+positionCenterWindow.top);
-			
 			var $canvas = this._createLines(windowMarker,positionMarkerMap,positionMarkerFrise);
 			$canvas.idMarker = windowMarker.marker.wikiID;
 			

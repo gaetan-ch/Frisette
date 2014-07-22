@@ -29,6 +29,11 @@ div.line {
 	color: #D8D8D8;
 	margin: 8px;
 }
+.popupResource.selected{	
+	border-color: yellow;
+}
+
+
 .popup-anchor-button {
 	cursor: pointer;
 	background-image: url(img/anchor.png);

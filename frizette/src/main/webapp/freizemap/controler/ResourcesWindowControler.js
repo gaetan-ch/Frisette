@@ -19,20 +19,27 @@ function ResourcesWindowControler( freizeMapControler){
 };
 
 ResourcesWindowControler.prototype = {
-		addWindow : function(marker, positionMarkerMap,positionMarkerFrise) {
+		
+		ressourceMapOrFriseSelected : function(marker,mapPosition,frizePosition){
+			
+			if(this.isMarkerPresent(marker.wikiID)){
+				this.toggleWindow(marker.wikiID, mapPosition, frizePosition/*frise position*/);						
+			}else{
+				this.addWindow(marker, mapPosition, frizePosition/*frise position*/);
+				this.selectWindow(marker.wikiID,mapPosition,frizePosition);	
+			}
+		},
+		
+		addWindow : function(marker, mapPosition, frizePosition) {
 			var me = this, windowMarker;
 			
-			//check if the marker is already present
-			//if(this.floatwindowsList.length>=this.maxPopup){
-				//remove the first popup
-			//}
 			windowMarker = this.layerResources.getWindowFromMarker(marker.wikiID);
 			if(windowMarker==null){
 				//A placer dans le controler
 				windowMarker = new PopUpResource(marker);
 				
-				this.layerResources.addPopUpResource(windowMarker);				
-				me.selectWindow(marker.wikiID,positionMarkerMap,positionMarkerFrise);	
+				this.layerResources.addPopUpResource(windowMarker,frizePosition, mapPosition );				
+				
 				//listen
 				windowMarker.setObserversFunction({
 					onCloseRequest : function($popup){
@@ -43,10 +50,11 @@ ResourcesWindowControler.prototype = {
 					}
 					,
 					onSelectWindow : function($popup){
-						//go to the controler which send back to map and frize
+												
 						var markerId= $popup.marker.wikiID;
 						if(me._indexMarkerSelected(markerId)===-1){
 							//not selected
+							//go to the controler which send back to map and frize
 							me.freizeMapControler.selectMarker(markerId);
 						}else{
 							me.unSelectWindow(markerId);
@@ -55,8 +63,7 @@ ResourcesWindowControler.prototype = {
 				});
 				
 			}else{
-				//Not here...
-				this.unSelectWindow(marker.wikiID);
+				console.error('Window should not have been found...');
 			}
 			
 			
@@ -69,6 +76,8 @@ ResourcesWindowControler.prototype = {
 
 		deleteAllWindow : function (){				
 			this.layerResources.removeAllWindows();
+			//don't remove window on the left panel
+			//this.panelResources.removeAll();
 			this.layerResourceMarkerLink.removeAllLines();
 			this.windowsSelected = new Array();
 		},
@@ -79,20 +88,20 @@ ResourcesWindowControler.prototype = {
 			var markerId = windowToAnchor.marker.wikiID,
 					  me = this;
 			
-			//delete line from link layer and selection
-			this.unSelectWindow(markerId)
-			
+			//delete line from link layer and selection and delete from the absolute layer
+			this.unSelectWindow(markerId);
+			this.layerResources.detachFromThisContainer(windowToAnchor);
 			//add the window to the panel Anchor
 			this.panelResources.addWindowResource(windowToAnchor, function(){
 				//on ready
-				//redraw lines
+				//go to the controler to select marker (need )
 				me.freizeMapControler.selectMarker(markerId);
 			});
 			
 			
 		},
 		
-		_closeWindow : function (windowToClose){
+		_closeWindow : function (windowToClose){			
 			console.info('close the window');
 			if(this.layerResources.getWindowFromMarker(windowToClose.marker.wikiID)!=null){
 				this.layerResources.remove(windowToClose);
@@ -111,6 +120,18 @@ ResourcesWindowControler.prototype = {
 			
 		},
 		
+		/*
+		 * Select if not, unselect if selected 
+		 */
+		toggleWindow : function(idMarker, mapPosition, frizePosition){
+			var indexMarkerSelected = this._indexMarkerSelected(idMarker);
+			if(indexMarkerSelected > -1){				
+				this.unSelectWindow(idMarker);
+			}else{
+				this.selectWindow(idMarker, mapPosition, frizePosition);
+			}
+		},
+		
 		unSelectWindow : function(idMarker){
 			this.layerResources.unSelectWindow(idMarker);
 			this.panelResources.unSelectWindow(idMarker);
@@ -120,19 +141,15 @@ ResourcesWindowControler.prototype = {
 		},
 		
 		selectWindow : function(idMarker,positionMarkerMap,positionMarkerFrise){
-			var indexMarkerSelected = this._indexMarkerSelected(idMarker), windowSelected;
+
+			var windowSelected = this.panelResources.selectWindow(idMarker);
 			
-			if(indexMarkerSelected > -1){				
-				this.unSelectWindow(idMarker);
-			}else{				
-				windowSelected = this.panelResources.selectWindow(idMarker);
-				
-				if(windowSelected == null){
-					windowSelected = this.layerResources.selectWindow(idMarker);							
-				}
-				this.windowsSelected.push(idMarker);
-				this.layerResourceMarkerLink.linkToMarkers(windowSelected,positionMarkerMap,positionMarkerFrise);
+			if(windowSelected == null){
+				windowSelected = this.layerResources.selectWindow(idMarker);							
 			}
+			this.windowsSelected.push(idMarker);
+			this.layerResourceMarkerLink.linkToMarkers(windowSelected,positionMarkerMap,positionMarkerFrise);
+		
 		},
 		
 		_indexMarkerSelected : function(idMarker){			

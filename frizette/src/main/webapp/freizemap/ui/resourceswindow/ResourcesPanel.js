@@ -1,12 +1,12 @@
 /*
- * Display some PopupResource in a panel, (the panel is hidden to the screen at startup)  
+ * Display some PopupResource in a panel, (the panel is hidden from the screen at startup)  
  */
 //inheritance
 function ResourcesPanel(){
 	this.$DivPanel = $('#panelResources');
 	this.$DivPanel.css('z-index',  window.CONFIG_Z_INDEX.PANEL_RESOURCES);
 	
-	this.$handlePanel = new HandlePanel(this.$DivPanel);
+	/*this.$handlePanel = new HandlePanel(this.$DivPanel);
 	this.$handlePanel.onHeightChange(function(heightPercent){
 		
 		$.event.trigger({
@@ -14,7 +14,7 @@ function ResourcesPanel(){
 			heightPercent : heightPercent,
 			time : new Date()
 		});
-	});
+	});*/
 	
 }
 
@@ -27,7 +27,7 @@ ResourcesPanel.prototype.constructor = ResourcesPanel;
  * @param windowResource
  */
 ResourcesPanel.prototype.addWindowResource = function(windowResource,onReadyFunction) {
-		
+		var isfirstWindow= this.isEmpty();
 		windowResource.detach();
 		windowResource.resetStyle();
 		windowResource.css({
@@ -35,23 +35,21 @@ ResourcesPanel.prototype.addWindowResource = function(windowResource,onReadyFunc
 			display: 'block',		
 			padding: '5px 0px 0px 0px'
 		});		
-		windowResource.hiddenAnchorButton();
+		windowResource.hiddeAnchorButton();
 		this.$DivPanel.append(windowResource.getJQueryAnchor());
-		
+		this.push(windowResource);
 		//add listener
-		
-		
-		if(this.isEmpty()){
-			this._show(onReadyFunction);
+		if(isfirstWindow){
+			this._show(onReadyFunction);			
 		}else{
 			onReadyFunction();
 		}
-		this.push(windowResource);
+		
 		
 	};
 
 ResourcesPanel.prototype._show = function(onReadyFunction){
-	this.$handlePanel.display();		
+	//this.$handlePanel.display();		
 	
 	this.$DivPanel.css('padding',  '5px');
 	this.$DivPanel.css('border',  '2px');

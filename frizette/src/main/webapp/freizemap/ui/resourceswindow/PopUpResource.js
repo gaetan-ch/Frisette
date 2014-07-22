@@ -1,4 +1,4 @@
-PopUpResource.viewHtml = "<div class='popupResource tg-modal timeglider-ev-modal ui-widget-content ${extra_class}' id='${id}_modal'>"
+PopUpResource.viewHtml = "<div class='popupResource tg-modal timeglider-ev-modal ui-widget-content ${extra_class}' id='modal_${id}'>"
 		+ "<div class='popup-close-button tg-close-button tg-close-button-remove'></div>"
 		+ "<div class='popup-anchor-button'>1</div>"
 		+ "<div class='popup-title'>${title}</div>"
@@ -6,7 +6,7 @@ PopUpResource.viewHtml = "<div class='popupResource tg-modal timeglider-ev-modal
 		+ "<ul class='popup-links'>{{html links}}</ul>"
 		+ "</div>";
 
-function PopUpResource(marker) {
+function PopUpResource(marker) { 
 
 	// For displaying an exterior page directly in the modal
 	/*
@@ -18,6 +18,7 @@ function PopUpResource(marker) {
 	 */
 	var viewFinalHTML = new String(PopUpResource.viewHtml);
 	viewFinalHTML = viewFinalHTML.replace('${title}', marker.nameSurname)
+			.replace('${id}', window.GENERATE_ID++)
 			.replace('{{html description}}', marker.debugInfo())
 			.replace('{{html image}}', '')
 			.replace('{{html links}}', '');
@@ -63,8 +64,11 @@ PopUpResource.prototype = {
 		observersFunction = observersFunction_;
 		
 		if($.isFunction(observersFunction.onCloseRequest)){
-			$closeButton.on('click',function (e){
-				observersFunction.onCloseRequest(me);}
+			$closeButton.on('click',
+					function (e){
+							me.$modal.off('click');
+							observersFunction.onCloseRequest(me);
+					}
 			);
 		}
 		if($.isFunction(observersFunction.onAnchorRequest)){
@@ -94,7 +98,7 @@ PopUpResource.prototype = {
 		return this.$modal;
 	},
 	
-	hiddenAnchorButton : function(){
+	hiddeAnchorButton : function(){
 		
 		return this.$modal.find('.popup-anchor-button').hide();
 	},
@@ -131,10 +135,12 @@ PopUpResource.prototype = {
 	
 	select : function (){
 		console.info('Select this modal : ' + this.$modal);
+		this.$modal.addClass('selected');
 	},
 	
 	unSelect : function (){
 		console.info('UnSelect this modal : ' + this.$modal);
+		this.$modal.removeClass('selected');
 	}
 	
 };
